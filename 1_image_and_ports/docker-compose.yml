@@ -1,0 +1,14 @@
+services:
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "fastapi-web"
+    ports:
+      - "8000:8000"
+
+  redis:
+    image: redis:latest
+    container_name: "fastapi-redis"
+    expose:
+      - 6379

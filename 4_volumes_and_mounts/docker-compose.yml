@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "tutorial-fastapi-api"
+    # Map internal port 8000 to host port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    environment:
+      - DB_USER=postgres
+      - DB_PASS=secret
+      - DB_HOST=db
+      - DB_NAME=tasks_db
+      - DB_PORT=5432
+
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8000
+
+  db:
+    image: postgres:latest
+    container_name: "tutorial-postgres-db"
+    # Named volume for persistent database storage
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tasks_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+    ports:
+      - "5432:5432"
+
+# Declare the named volume
+volumes:
+  pgdata:
